@@ -1,0 +1,84 @@
+# ---- Python ----
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+**/*.egg-info/
+.pytest_cache/
+**/.pytest_cache/
+
+# ---- Environments ----
+venv/
+**/venv/
+.venv/
+**/.venv/
+env/
+**/env/
+ENV/
+
+# ---- Secrets & Environment Variables ----
+.env
+.env.*
+!.env.example
+*.env
+**/.env
+**/.env.*
+!**/.env.example
+kaggle.json
+**/kaggle.json
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+credentials.json
+client_secret*.json
+
+# ---- Model & Data Artifacts (reproducible via pipeline) ----
+backend/models/*
+backend/results/*
+backend/data/*
+!backend/models/.gitkeep
+!backend/results/.gitkeep
+!backend/data/.gitkeep
+*.joblib
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.onnx
+
+# Large tabular data formats
+*.parquet
+*.feather
+*.nc
+*.netcdf
+
+# ---- Node & Frontend ----
+node_modules/
+**/node_modules/
+frontend/dist/
+dist/
+**/dist/
+frontend/.vite/
+.vite/
+**/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- IDE & OS Metadata ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.log
+logs/

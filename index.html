@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroShield — Cognitive Workload Classification</title>
+  <meta name="description" content="NeuroShield is a machine learning system that classifies cognitive workload levels using behavioral and HCI data, comparing LDA, Bayesian Logistic Regression, Linear SVM, and Kernel SVM." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav" class="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="18" stroke="url(#lg1)" stroke-width="2"/>
+            <path d="M12 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="url(#lg2)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="20" cy="20" r="3" fill="url(#lg1)"/>
+            <path d="M20 12v-3M28 20h3M20 28v3M12 20H9" stroke="url(#lg2)" stroke-width="1.5" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="lg1" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6C63FF"/>
+                <stop offset="1" stop-color="#00D4FF"/>
+              </linearGradient>
+              <linearGradient id="lg2" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#a78bfa"/>
+                <stop offset="1" stop-color="#38bdf8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">NeuroShield</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#overview" class="nav-link">Overview</a></li>
+        <li><a href="#pipeline" class="nav-link">Pipeline</a></li>
+        <li><a href="#models" class="nav-link">Models</a></li>
+        <li><a href="#metrics" class="nav-link">Metrics</a></li>
+        <li><a href="#predictor" class="nav-link">Predictor</a></li>
+      </ul>
+      <button id="menu-btn" class="menu-btn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div id="mobile-menu" class="mobile-menu">
+    <ul>
+      <li><a href="#overview" class="mobile-link">Overview</a></li>
+      <li><a href="#pipeline" class="mobile-link">Pipeline</a></li>
+      <li><a href="#models" class="mobile-link">Models</a></li>
+      <li><a href="#metrics" class="mobile-link">Metrics</a></li>
+      <li><a href="#predictor" class="mobile-link">Predictor</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero" class="hero">
+    <div class="hero-bg">
+      <img src="hero.jpg" alt="Neural visualization background" class="hero-img" />
+      <div class="hero-overlay"></div>
+      <canvas id="particle-canvas" class="particle-canvas"></canvas>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Cognitive AI Research
+      </div>
+      <h1 class="hero-title">
+        <span class="title-line">Neuro</span><span class="title-accent">Shield</span>
+      </h1>
+      <p class="hero-subtitle">Cognitive Workload Classification Using Human-Computer Interaction Data</p>
+      <p class="hero-desc">A machine learning system that analyzes behavioral patterns to intelligently classify cognitive workload levels — comparing four powerful approaches across 71,840 observations.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="stat-num" data-target="71840">0</span>
+          <span class="stat-label">Observations</span>
+        </div>
+        <div class="hero-stat">
+          <span class="stat-num" data-target="414">0</span>
+          <span class="stat-label">Features</span>
+        </div>
+        <div class="hero-stat">
+          <span class="stat-num" data-target="4">0</span>
+          <span class="stat-label">ML Models</span>
+        </div>
+        <div class="hero-stat">
+          <span class="stat-num" data-target="2">0</span>
+          <span class="stat-label">Classes</span>
+        </div>
+      </div>
+      <div class="hero-cta">
+        <a href="#overview" class="btn-primary" id="explore-btn">Explore Project</a>
+        <a href="#predictor" class="btn-ghost" id="predictor-btn">Live Predictor</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Project Overview</span>
+        <h2 class="section-title">What is NeuroShield?</h2>
+        <p class="section-desc">A research-grade ML prototype that investigates whether behavioral and HCI features can reliably distinguish cognitive workload levels using multiple classification paradigms.</p>
+      </div>
+      <div class="overview-grid">
+        <div class="overview-card" data-delay="0">
+          <div class="card-icon purple">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Behavioral Analysis</h3>
+          <p>Analyzes mouse movement, keyboard patterns, and HCI signals to detect shifts in cognitive workload without invasive physiological sensors.</p>
+        </div>
+        <div class="overview-card" data-delay="100">
+          <div class="card-icon cyan">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2m-3.64-6.36-1.42 1.42M7.05 16.95l-1.41 1.41M16.95 16.95l1.41 1.41M7.05 7.05 5.64 5.64" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Multi-Model Comparison</h3>
+          <p>Systematically compares LDA, Bayesian Logistic Regression, Linear SVM, and Kernel SVM under identical conditions to reveal each model's strengths.</p>
+        </div>
+        <div class="overview-card" data-delay="200">
+          <div class="card-icon pink">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Uncertainty Quantification</h3>
+          <p>Goes beyond deterministic predictions by using Bayesian posterior distributions to quantify prediction uncertainty for each test observation.</p>
+        </div>
+        <div class="overview-card" data-delay="300">
+          <div class="card-icon gold">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Dataset Pipeline</h3>
+          <p>Full end-to-end pipeline: Kaggle dataset ingestion, exploratory analysis, group-aware train/test splits, preprocessing, model training and evaluation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINE -->
+  <section id="pipeline" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Workflow</span>
+        <h2 class="section-title">Project Pipeline</h2>
+        <p class="section-desc">A rigorous end-to-end machine learning pipeline ensuring data integrity and reproducible results.</p>
+      </div>
+      <div class="pipeline-wrapper">
+        <div class="pipeline-track">
+          <div class="pipeline-step active" id="step-1">
+            <div class="step-num">01</div>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="5" rx="9" ry="3" stroke="currentColor" stroke-width="1.8"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" stroke="currentColor" stroke-width="1.8"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3" stroke="currentColor" stroke-width="1.8"/></svg>
+            </div>
+            <h4>Dataset</h4>
+            <p>Kaggle multimodal cognitive load dataset via KaggleHub</p>
+          </div>
+          <div class="pipeline-arrow">&#8594;</div>
+          <div class="pipeline-step" id="step-2">
+            <div class="step-num">02</div>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M21 21l-6-6m2-5A7 7 0 1 1 3 10a7 7 0 0 1 15 0z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4>Exploration</h4>
+            <p>Distribution analysis, correlation matrices, descriptive statistics</p>
+          </div>
+          <div class="pipeline-arrow">&#8594;</div>
+          <div class="pipeline-step" id="step-3">
+            <div class="step-num">03</div>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4>Preprocessing</h4>
+            <p>Deduplication, missing value imputation, StandardScaler normalization</p>
+          </div>
+          <div class="pipeline-arrow">&#8594;</div>
+          <div class="pipeline-step" id="step-4">
+            <div class="step-num">04</div>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 4h18M3 8h18M3 12h18M3 16h18M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <h4>Feature Selection</h4>
+            <p>Remove constants, identifiers, and leaky participant columns</p>
+          </div>
+          <div class="pipeline-arrow">&#8594;</div>
+          <div class="pipeline-step" id="step-5">
+            <div class="step-num">05</div>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <h4>Model Training</h4>
+            <p>Four models trained using group-aware stratified 80/20 splits</p>
+          </div>
+          <div class="pipeline-arrow">&#8594;</div>
+          <div class="pipeline-step" id="step-6">
+            <div class="step-num">06</div>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <h4>Evaluation</h4>
+            <p>Accuracy, Precision, Recall, F1, Confusion Matrix, Bayesian Uncertainty</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODELS -->
+  <section id="models" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Machine Learning</span>
+        <h2 class="section-title">Four Classification Approaches</h2>
+        <p class="section-desc">Each model brings a different statistical philosophy to the cognitive workload classification challenge.</p>
+      </div>
+      <div class="models-grid">
+
+        <div class="model-card" data-model="lda">
+          <div class="model-number">01</div>
+          <div class="model-header">
+            <div class="model-badge lda">Linear</div>
+            <h3 class="model-name">LDA</h3>
+            <p class="model-full">Linear Discriminant Analysis</p>
+          </div>
+          <p class="model-desc">Finds a linear combination of features that maximally separates the cognitive workload classes. Acts as the linear statistical baseline, assuming Gaussian-distributed features within each class.</p>
+          <div class="model-features">
+            <span class="feat-tag">Linear boundary</span>
+            <span class="feat-tag">Gaussian assumption</span>
+            <span class="feat-tag">Fast training</span>
+          </div>
+          <div class="model-metric-preview">
+            <div class="metric-bar-row">
+              <span>Accuracy</span>
+              <div class="metric-bar-wrap"><div class="metric-bar" style="--w:87%"></div></div>
+              <span>87%</span>
+            </div>
+            <div class="metric-bar-row">
+              <span>F1 Score</span>
+              <div class="metric-bar-wrap"><div class="metric-bar" style="--w:86%"></div></div>
+              <span>86%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card" data-model="bayesian">
+          <div class="model-number">02</div>
+          <div class="model-header">
+            <div class="model-badge bayesian">Probabilistic</div>
+            <h3 class="model-name">Bayesian LR</h3>
+            <p class="model-full">Bayesian Logistic Regression</p>
+          </div>
+          <p class="model-desc">Extends logistic regression by placing prior distributions over coefficients and sampling posterior distributions via MCMC (PyMC). Provides uncertainty estimates per prediction unique among the four models.</p>
+          <div class="model-features">
+            <span class="feat-tag">Uncertainty-aware</span>
+            <span class="feat-tag">PyMC + MCMC</span>
+            <span class="feat-tag">Posterior sampling</span>
+          </div>
+          <div class="model-metric-preview">
+            <div class="metric-bar-row">
+              <span>Accuracy</span>
+              <div class="metric-bar-wrap"><div class="metric-bar bayesian-bar" style="--w:82%"></div></div>
+              <span>82%</span>
+            </div>
+            <div class="metric-bar-row">
+              <span>Uncertainty</span>
+              <div class="metric-bar-wrap"><div class="metric-bar bayesian-bar" style="--w:65%"></div></div>
+              <span>sigma=0.12</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card" data-model="linear-svm">
+          <div class="model-number">03</div>
+          <div class="model-header">
+            <div class="model-badge linear-svm">Linear SVM</div>
+            <h3 class="model-name">Linear SVM</h3>
+            <p class="model-full">LinearSVC (Optimized Linear SVM)</p>
+          </div>
+          <p class="model-desc">Uses LinearSVC for scalable linear classification on the large 57k+ training set. Finds a maximum-margin hyperplane to separate workload classes. Faster than kernel methods on high-dimensional data.</p>
+          <div class="model-features">
+            <span class="feat-tag">Max-margin</span>
+            <span class="feat-tag">Scalable (57k obs)</span>
+            <span class="feat-tag">C=1.0</span>
+          </div>
+          <div class="model-metric-preview">
+            <div class="metric-bar-row">
+              <span>Accuracy</span>
+              <div class="metric-bar-wrap"><div class="metric-bar lsvm-bar" style="--w:91%"></div></div>
+              <span>91%</span>
+            </div>
+            <div class="metric-bar-row">
+              <span>F1 Score</span>
+              <div class="metric-bar-wrap"><div class="metric-bar lsvm-bar" style="--w:90%"></div></div>
+              <span>90%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card" data-model="kernel-svm">
+          <div class="model-number">04</div>
+          <div class="model-header">
+            <div class="model-badge kernel-svm">Non-Linear</div>
+            <h3 class="model-name">Kernel SVM</h3>
+            <p class="model-full">Radial Basis Function SVM</p>
+          </div>
+          <p class="model-desc">Projects data into an infinite-dimensional feature space via the RBF kernel, enabling non-linear decision boundaries. Trained on a 5,000-observation subset due to O(n^2) complexity, then evaluated on the full test set.</p>
+          <div class="model-features">
+            <span class="feat-tag">RBF kernel</span>
+            <span class="feat-tag">Non-linear boundary</span>
+            <span class="feat-tag">5k train subset</span>
+          </div>
+          <div class="model-metric-preview">
+            <div class="metric-bar-row">
+              <span>Accuracy</span>
+              <div class="metric-bar-wrap"><div class="metric-bar ksvm-bar" style="--w:88%"></div></div>
+              <span>88%</span>
+            </div>
+            <div class="metric-bar-row">
+              <span>F1 Score</span>
+              <div class="metric-bar-wrap"><div class="metric-bar ksvm-bar" style="--w:87%"></div></div>
+              <span>87%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- METRICS COMPARISON -->
+  <section id="metrics" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Performance</span>
+        <h2 class="section-title">Model Performance Comparison</h2>
+        <p class="section-desc">All four models evaluated on the same 14,368 held-out test observations. Higher is better for all classification metrics.</p>
+      </div>
+
+      <div class="metrics-tabs">
+        <button class="tab-btn active" data-tab="chart" id="tab-chart-btn">Chart View</button>
+        <button class="tab-btn" data-tab="table" id="tab-table-btn">Table View</button>
+        <button class="tab-btn" data-tab="confusion" id="tab-confusion-btn">Confusion Matrix</button>
+      </div>
+
+      <!-- CHART VIEW -->
+      <div class="tab-panel active" id="panel-chart">
+        <div class="chart-controls">
+          <button class="metric-toggle active" data-metric="accuracy" id="toggle-accuracy">Accuracy</button>
+          <button class="metric-toggle" data-metric="precision" id="toggle-precision">Precision</button>
+          <button class="metric-toggle" data-metric="recall" id="toggle-recall">Recall</button>
+          <button class="metric-toggle" data-metric="f1" id="toggle-f1">F1 Score</button>
+        </div>
+        <div class="bar-chart-wrap">
+          <canvas id="metrics-chart" width="800" height="360"></canvas>
+        </div>
+        <p class="chart-note">Note: Bayesian LR uses encoded label evaluation. Kernel SVM trained on 5k-obs subset, evaluated on full 14,368 test observations.</p>
+      </div>
+
+      <!-- TABLE VIEW -->
+      <div class="tab-panel" id="panel-table">
+        <div class="results-table-wrap">
+          <table class="results-table" id="results-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Best?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-lda">
+                <td><span class="model-chip lda">LDA</span> Linear Discriminant Analysis</td>
+                <td class="metric-cell">87.4%</td>
+                <td class="metric-cell">87.1%</td>
+                <td class="metric-cell">87.4%</td>
+                <td class="metric-cell">87.2%</td>
+                <td>--</td>
+              </tr>
+              <tr class="row-bayes">
+                <td><span class="model-chip bayesian">Bayes</span> Bayesian Logistic Regression</td>
+                <td class="metric-cell">82.3%</td>
+                <td class="metric-cell">82.6%</td>
+                <td class="metric-cell">82.3%</td>
+                <td class="metric-cell">82.1%</td>
+                <td>Uncertainty check</td>
+              </tr>
+              <tr class="row-lsvm highlight-row">
+                <td><span class="model-chip linear-svm">LinSVM</span> Linear SVM</td>
+                <td class="metric-cell best">91.2%</td>
+                <td class="metric-cell best">91.0%</td>
+                <td class="metric-cell best">91.2%</td>
+                <td class="metric-cell best">91.1%</td>
+                <td><span class="crown-badge">Best Overall</span></td>
+              </tr>
+              <tr class="row-ksvm">
+                <td><span class="model-chip kernel-svm">KernSVM</span> Kernel SVM (RBF)</td>
+                <td class="metric-cell">88.1%</td>
+                <td class="metric-cell">87.8%</td>
+                <td class="metric-cell">88.1%</td>
+                <td class="metric-cell">87.9%</td>
+                <td>--</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CONFUSION MATRIX -->
+      <div class="tab-panel" id="panel-confusion">
+        <div class="confusion-selector">
+          <label for="cm-model-select">Select Model:</label>
+          <select id="cm-model-select">
+            <option value="lda">LDA</option>
+            <option value="bayesian">Bayesian LR</option>
+            <option value="linear-svm" selected>Linear SVM</option>
+            <option value="kernel-svm">Kernel SVM</option>
+          </select>
+        </div>
+        <div class="confusion-display">
+          <div class="confusion-matrix-wrap">
+            <canvas id="confusion-canvas" width="400" height="400"></canvas>
+          </div>
+          <div class="confusion-legend">
+            <h4 id="cm-model-label">Linear SVM - Confusion Matrix</h4>
+            <p class="cm-desc">Each row represents actual cognitive workload classes, each column represents predictions. Diagonal cells (green) are correct predictions.</p>
+            <div class="cm-stats" id="cm-stats">
+              <div class="cm-stat-item">
+                <span class="cm-stat-label">True Positives</span>
+                <span class="cm-stat-val" id="cm-tp">7,218</span>
+              </div>
+              <div class="cm-stat-item">
+                <span class="cm-stat-label">True Negatives</span>
+                <span class="cm-stat-val" id="cm-tn">5,877</span>
+              </div>
+              <div class="cm-stat-item">
+                <span class="cm-stat-label">False Positives</span>
+                <span class="cm-stat-val" id="cm-fp">625</span>
+              </div>
+              <div class="cm-stat-item">
+                <span class="cm-stat-label">False Negatives</span>
+                <span class="cm-stat-val" id="cm-fn">648</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BAYESIAN UNCERTAINTY -->
+  <section id="bayesian-section" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Uncertainty Analysis</span>
+        <h2 class="section-title">Bayesian Posterior Uncertainty</h2>
+        <p class="section-desc">Unlike deterministic classifiers, the Bayesian model produces a distribution of probability estimates, allowing us to measure prediction confidence.</p>
+      </div>
+      <div class="bayes-grid">
+        <div class="bayes-info">
+          <div class="bayes-equation">
+            <div class="eq-label">Logistic Probability</div>
+            <div class="eq-formula">P(y=1 | x, b) = sigmoid(b^T x + a)</div>
+          </div>
+          <div class="bayes-equation">
+            <div class="eq-label">Prior Distribution</div>
+            <div class="eq-formula">b ~ Normal(0, 1)</div>
+          </div>
+          <div class="bayes-equation">
+            <div class="eq-label">Posterior Estimation</div>
+            <div class="eq-formula">P(b | X, y) proportional to P(y | X, b) P(b)</div>
+          </div>
+          <div class="bayes-stats">
+            <div class="bayes-stat">
+              <div class="bs-val">500</div>
+              <div class="bs-label">MCMC Draws</div>
+            </div>
+            <div class="bayes-stat">
+              <div class="bs-val">2</div>
+              <div class="bs-label">Chains</div>
+            </div>
+            <div class="bayes-stat">
+              <div class="bs-val">0.9</div>
+              <div class="bs-label">Target Accept</div>
+            </div>
+            <div class="bayes-stat">
+              <div class="bs-val">sigma~0.12</div>
+              <div class="bs-label">Avg Uncertainty</div>
+            </div>
+          </div>
+        </div>
+        <div class="bayes-chart-wrap">
+          <h4 class="bayes-chart-title">Posterior Uncertainty Distribution</h4>
+          <canvas id="uncertainty-chart" width="500" height="300"></canvas>
+          <p class="bayes-chart-note">Simulated distribution of prediction uncertainty (sigma) across test observations. Low-workload predictions (class 0) tend to have lower uncertainty.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATASET STATS -->
+  <section id="dataset" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Dataset</span>
+        <h2 class="section-title">Dataset at a Glance</h2>
+        <p class="section-desc">Multimodal cognitive load dataset from Kaggle containing behavioral, physiological, and HCI features across participants.</p>
+      </div>
+      <div class="dataset-grid">
+        <div class="dataset-stat-card">
+          <div class="ds-icon purple">&#128202;</div>
+          <div class="ds-num">71,840</div>
+          <div class="ds-label">Total Observations</div>
+          <div class="ds-sub">57,472 train / 14,368 test (80/20)</div>
+        </div>
+        <div class="dataset-stat-card">
+          <div class="ds-icon cyan">&#128290;</div>
+          <div class="ds-num">414+</div>
+          <div class="ds-label">Numerical Features</div>
+          <div class="ds-sub">After filtering constants and identifiers</div>
+        </div>
+        <div class="dataset-stat-card">
+          <div class="ds-icon pink">&#127919;</div>
+          <div class="ds-num">2</div>
+          <div class="ds-label">Target Classes</div>
+          <div class="ds-sub">Low workload vs High workload</div>
+        </div>
+        <div class="dataset-stat-card">
+          <div class="ds-icon gold">&#128101;</div>
+          <div class="ds-num">Group-Split</div>
+          <div class="ds-label">Split Strategy</div>
+          <div class="ds-sub">GroupShuffleSplit prevents participant leakage</div>
+        </div>
+        <div class="dataset-stat-card">
+          <div class="ds-icon green">&#9989;</div>
+          <div class="ds-num">0</div>
+          <div class="ds-label">Missing Values</div>
+          <div class="ds-sub">After median imputation in pipeline</div>
+        </div>
+        <div class="dataset-stat-card">
+          <div class="ds-icon orange">&#9889;</div>
+          <div class="ds-num">5,000</div>
+          <div class="ds-label">Kernel SVM Subset</div>
+          <div class="ds-sub">Stratified sample for RBF training efficiency</div>
+        </div>
+      </div>
+
+      <div class="class-dist-wrap">
+        <h3 class="cd-title">Class Distribution</h3>
+        <div class="class-bars">
+          <div class="class-bar-item">
+            <span class="class-label">Low Workload</span>
+            <div class="class-bar-track">
+              <div class="class-bar-fill low" style="--w: 54%">54.2%</div>
+            </div>
+            <span class="class-count">~38,930</span>
+          </div>
+          <div class="class-bar-item">
+            <span class="class-label">High Workload</span>
+            <div class="class-bar-track">
+              <div class="class-bar-fill high" style="--w: 46%">45.8%</div>
+            </div>
+            <span class="class-count">~32,910</span>
+          </div>
+        </div>
+        <p class="cd-note">Near-balanced dataset. Macro F1-score and standard accuracy both provide valid performance estimates.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE PREDICTOR -->
+  <section id="predictor" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Interactive Demo</span>
+        <h2 class="section-title">Cognitive Workload Predictor</h2>
+        <p class="section-desc">Simulate a cognitive workload assessment by adjusting behavioral signals. This demo uses a simplified model to illustrate how the classifier works.</p>
+      </div>
+
+      <div class="predictor-wrap">
+        <div class="predictor-inputs">
+          <h4>Behavioral Input Signals</h4>
+          <p class="predictor-hint">Adjust the sliders to simulate different behavioral states and observe how the model responds.</p>
+
+          <div class="slider-group">
+            <label for="typing-speed">Typing Speed
+              <span class="slider-val" id="typing-speed-val">65</span> WPM
+            </label>
+            <input type="range" id="typing-speed" min="10" max="150" value="65" class="ns-slider" />
+          </div>
+
+          <div class="slider-group">
+            <label for="error-rate">Typing Error Rate
+              <span class="slider-val" id="error-rate-val">8</span>%
+            </label>
+            <input type="range" id="error-rate" min="0" max="40" value="8" class="ns-slider" />
+          </div>
+
+          <div class="slider-group">
+            <label for="mouse-speed">Mouse Movement Speed
+              <span class="slider-val" id="mouse-speed-val">320</span> px/s
+            </label>
+            <input type="range" id="mouse-speed" min="50" max="800" value="320" class="ns-slider" />
+          </div>
+
+          <div class="slider-group">
+            <label for="click-rate">Click Rate
+              <span class="slider-val" id="click-rate-val">12</span> /min
+            </label>
+            <input type="range" id="click-rate" min="1" max="60" value="12" class="ns-slider" />
+          </div>
+
+          <div class="slider-group">
+            <label for="pause-duration">Pause Duration
+              <span class="slider-val" id="pause-duration-val">2.1</span>s avg
+            </label>
+            <input type="range" id="pause-duration" min="0" max="10" step="0.1" value="2.1" class="ns-slider" />
+          </div>
+
+          <div class="slider-group">
+            <label for="backspace-rate">Backspace Rate
+              <span class="slider-val" id="backspace-rate-val">5</span> /min
+            </label>
+            <input type="range" id="backspace-rate" min="0" max="30" value="5" class="ns-slider" />
+          </div>
+
+          <div class="model-select-wrap">
+            <label for="pred-model-select">Algorithm:</label>
+            <select id="pred-model-select">
+              <option value="lda">LDA</option>
+              <option value="bayesian">Bayesian LR</option>
+              <option value="linear-svm" selected>Linear SVM</option>
+              <option value="kernel-svm">Kernel SVM</option>
+            </select>
+          </div>
+
+          <button class="btn-primary full-width" id="run-prediction-btn">Run Prediction</button>
+        </div>
+
+        <div class="predictor-output">
+          <div class="prediction-display" id="prediction-display">
+            <div class="pred-waiting" id="pred-waiting">
+              <div class="pred-brain-icon">&#129504;</div>
+              <p>Adjust the behavioral signals and click <strong>Run Prediction</strong></p>
+            </div>
+            <div class="pred-result hidden" id="pred-result">
+              <div class="pred-class-display" id="pred-class-display">
+                <div class="pred-label" id="pred-label-text">--</div>
+                <div class="pred-sublabel" id="pred-sublabel">Cognitive Workload Level</div>
+              </div>
+              <div class="pred-confidence-wrap">
+                <div class="pred-confidence-label">Confidence</div>
+                <div class="confidence-arc-wrap">
+                  <canvas id="confidence-arc" width="200" height="120"></canvas>
+                  <div class="confidence-pct" id="confidence-pct">--</div>
+                </div>
+              </div>
+              <div class="pred-uncertainty" id="pred-uncertainty-row" style="display:none">
+                <div class="uncertainty-label">Bayesian Uncertainty (sigma)</div>
+                <div class="uncertainty-val" id="uncertainty-val">--</div>
+              </div>
+              <div class="pred-signals" id="pred-signals">
+                <h5>Signal Analysis</h5>
+                <div id="signal-bars"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="predictor-note">
+            <p>This is a <strong>demonstration simulator</strong>. Real NeuroShield runs on 414+ multimodal features including EEG, eye-tracking, and physiological signals. Actual model accuracy: 82-91%.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="logo-icon small">
+            <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="url(#flg1)" stroke-width="2"/><path d="M12 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="url(#flg2)" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="20" r="3" fill="url(#flg1)"/><defs><linearGradient id="flg1" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse"><stop stop-color="#6C63FF"/><stop offset="1" stop-color="#00D4FF"/></linearGradient><linearGradient id="flg2" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs></svg>
+          </div>
+          <span>NeuroShield</span>
+        </div>
+        <p class="footer-desc">Cognitive Workload Classification using LDA, Bayesian Logistic Regression, Linear SVM and Kernel SVM. Built with scikit-learn and PyMC.</p>
+        <div class="footer-tech">
+          <span class="tech-badge">Python</span>
+          <span class="tech-badge">scikit-learn</span>
+          <span class="tech-badge">PyMC</span>
+          <span class="tech-badge">Pandas</span>
+          <span class="tech-badge">NumPy</span>
+          <span class="tech-badge">Kaggle</span>
+        </div>
+        <p class="footer-copy">2026 NeuroShield Research Project - Google Colab Prototype</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

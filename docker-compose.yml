@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    container_name: neuroshield-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Pass Kaggle credentials through from your shell / .env file.
+      - KAGGLE_USERNAME=${KAGGLE_USERNAME:-}
+      - KAGGLE_KEY=${KAGGLE_KEY:-}
+      - NEUROSHIELD_ALLOW_SYNTHETIC=${NEUROSHIELD_ALLOW_SYNTHETIC:-false}
+      - NEUROSHIELD_CORS_ORIGINS=http://localhost,http://localhost:5173
+    volumes:
+      # Persist trained artifacts + downloaded data across restarts.
+      - ./backend/models:/app/models
+      - ./backend/results:/app/results
+      - ./backend/data:/app/data
+
+  frontend:
+    build: ./frontend
+    container_name: neuroshield-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
